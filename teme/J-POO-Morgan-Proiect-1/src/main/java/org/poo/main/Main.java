@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
+import org.poo.bankingApp.BankManager;
 
 /**
  * The entry point to this homework. It runs the checker that tests your implementation.
@@ -73,6 +74,10 @@ public final class Main {
         ObjectInput inputData = objectMapper.readValue(file, ObjectInput.class);
 
         ArrayNode output = objectMapper.createArrayNode();
+
+        BankManager myApp = new BankManager();
+        myApp.processCommands(inputData, output);
+
 
         /*
          * TODO Implement your function here
