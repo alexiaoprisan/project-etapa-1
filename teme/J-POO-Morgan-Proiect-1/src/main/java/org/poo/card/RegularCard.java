@@ -1,42 +1,70 @@
 package org.poo.card;
 
+/**
+ * This class represents a regular card.
+ * A regular card can be used multiple times, for transactions.
+ */
 public class RegularCard implements Card {
     private String cardNumber;
-    private String type = "regular";
+    private static String type = "regular";
     private String status;
 
-    public RegularCard(String cardNumber) {
+    /**
+     * Constructor for a regular card.
+     *
+     * @param cardNumber The card number, generated previously.
+     */
+    public RegularCard(final String cardNumber) {
         this.cardNumber = cardNumber;
-        this.status = "active"; // Status initializat la "active"
+        this.status = "active";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCardNumber() {
         return cardNumber;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getStatus() {
         return status;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setCardNumber(String cardNumber) {
+    public void setCardNumber(final String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 

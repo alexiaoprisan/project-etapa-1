@@ -1,7 +1,7 @@
 package org.poo.commands;
 
 import org.poo.account.Account;
-import org.poo.bankingApp.UserRegistry;
+import org.poo.user.UserRegistry;
 import org.poo.user.User;
 import org.poo.card.Card;
 

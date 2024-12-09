@@ -1,37 +1,52 @@
 package org.poo.commands;
 
-import org.poo.account.Account;
-import org.poo.bankingApp.UserRegistry;
+import org.poo.user.UserRegistry;
 import org.poo.fileio.CommandInput;
-import org.poo.user.User;
-import org.poo.card.Card;
-import org.poo.bankingApp.ExchangeRates;
-import org.poo.fileio.CommerciantInput;
-import org.poo.transaction.Transaction;
-import org.poo.transaction.TransactionReport;
-
+import org.poo.exchangeRates.ExchangeRates;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/**
+ * Factory class for creating Command objects.
+ * The CommandFactory class is responsible for creating Command objects based on the command name.
+ * <p>
+ * This class is part of the Command design pattern.
+ */
 public class CommandFactory {
     private final UserRegistry userRegistry;
-    public final ExchangeRates exchangeRates;
+    private final ExchangeRates exchangeRates;
     private final ArrayNode output;
 
-    public CommandFactory(UserRegistry userRegistry, ArrayNode output, ExchangeRates exchangeRates) {
+    /**
+     * Constructor for the CommandFactory class.
+     *
+     * @param userRegistry  the UserRegistry object
+     * @param output        the ArrayNode object
+     * @param exchangeRates the ExchangeRates object
+     */
+    public CommandFactory(final UserRegistry userRegistry,
+                          final ArrayNode output,
+                          final ExchangeRates exchangeRates) {
         this.userRegistry = userRegistry;
         this.output = output;
         this.exchangeRates = exchangeRates;
     }
 
-    public Command createCommand(String commandType, CommandInput input) {
+    /**
+     * Creates a Command object based on the command type.
+     *
+     * @param commandType the command name
+     * @param input       the CommandInput object
+     * @return the Command object
+     */
+    public Command createCommand(final String commandType,
+                                 final CommandInput input) {
         int timestamp = input.getTimestamp();
         switch (commandType) {
             case "printUsers":
                 return new PrintUsersCommand(userRegistry, output, timestamp);
 
             case "addAccount":
-                return new AddAccountCommand(userRegistry, output, timestamp,
+                return new AddAccountCommand(userRegistry, timestamp,
                         input.getEmail(), input.getAccountType(), input.getCurrency());
 
             case "createCard":
@@ -43,8 +58,7 @@ public class CommandFactory {
                         input.getEmail(), input.getAccount(), "createOneTimeCard");
 
             case "addFunds":
-                return new AddFundsCommand(userRegistry, output, timestamp,
-                        input.getAccount(), input.getAmount());
+                return new AddFundsCommand(userRegistry, input.getAccount(), input.getAmount());
 
             case "deleteAccount":
                 return new DeleteAccountCommand(userRegistry, output, timestamp,
@@ -73,7 +87,8 @@ public class CommandFactory {
                         input.getEmail(), input.getAccount(), input.getAlias());
 
             case "checkCardStatus":
-                return new CheckCardStatusCommand(userRegistry, output, input.getCardNumber(), timestamp);
+                return new CheckCardStatusCommand(userRegistry, output,
+                        input.getCardNumber(), timestamp);
 
             case "setMinimumBalance":
                 return new SetMinimumBalanceCommand(userRegistry, output, timestamp,
@@ -92,11 +107,13 @@ public class CommandFactory {
                         input.getAccount());
 
             case "report":
-                return new ReportCommand(userRegistry, output, input.getStartTimestamp(), input.getEndTimestamp(),
+                return new ReportCommand(userRegistry, output, input.getStartTimestamp(),
+                        input.getEndTimestamp(),
                         input.getAccount(), timestamp);
 
             case "spendingsReport":
-                return new SpendingsReportCommand(userRegistry, output, input.getStartTimestamp(), input.getEndTimestamp(),
+                return new SpendingsReportCommand(userRegistry, output,
+                        input.getStartTimestamp(), input.getEndTimestamp(),
                         input.getAccount(), timestamp);
 
             default:

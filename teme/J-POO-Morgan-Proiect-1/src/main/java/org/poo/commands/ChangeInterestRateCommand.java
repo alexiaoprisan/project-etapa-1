@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.account.Account;
 import org.poo.account.SavingsAccount;
-import org.poo.bankingApp.ExchangeRates;
-import org.poo.bankingApp.UserRegistry;
-import org.poo.transaction.*;
+import org.poo.user.UserRegistry;
+import org.poo.transaction.InterestRateChange;
+import org.poo.transaction.Transaction;
 import org.poo.user.User;
 
+/**
+ * Command to change the interest rate of a savings account.
+ */
 public class ChangeInterestRateCommand implements Command {
     private UserRegistry userRegistry;
     private ArrayNode output;
@@ -16,7 +19,11 @@ public class ChangeInterestRateCommand implements Command {
     private String accountIBAN;
     private double interestRate;
 
-    public ChangeInterestRateCommand(UserRegistry userRegistry, ArrayNode output, int timestamp, String accountIBAN, double interestRate) {
+    public ChangeInterestRateCommand(final UserRegistry userRegistry,
+                                     final ArrayNode output,
+                                     final int timestamp,
+                                     final String accountIBAN,
+                                     final double interestRate) {
         this.userRegistry = userRegistry;
         this.output = output;
         this.timestamp = timestamp;
@@ -24,6 +31,23 @@ public class ChangeInterestRateCommand implements Command {
         this.interestRate = interestRate;
     }
 
+    /**
+     * Create a new transaction for the interest rate change.
+     * The transaction will be added to the user's transaction list and the account's report.
+     *
+     * @param user    the user that the account belongs to
+     * @param account the account that the interest rate was changed
+     */
+    private void createTransactions(final User user, final Account account) {
+        Transaction transaction = new InterestRateChange(timestamp,
+                "Interest rate of the account changed to " + interestRate);
+        user.addTransaction(transaction);
+        account.addTransaction(transaction);
+    }
+
+    /**
+     * Execute the command.
+     */
     @Override
     public void execute() {
         Account account = userRegistry.getAccountByIBAN(accountIBAN);
@@ -31,15 +55,18 @@ public class ChangeInterestRateCommand implements Command {
             return;
         }
 
-        if(account.getType().equals("savings")) {
+        // Check if the account is a savings account
+        if (account.getType().equals("savings")) {
             SavingsAccount savingsAccount = (SavingsAccount) account;
             savingsAccount.setInterestRate(interestRate);
 
-            Transaction transaction = new InterestRateChange(timestamp, "Interest rate of the account changed to " + interestRate);
+            // Get the user by IBAN from the user registry
             User user = userRegistry.getUserByIBAN(accountIBAN);
-            user.addTransaction(transaction);
-        }
-        else {
+
+            // Create the transaction for the interest rate change
+            createTransactions(user, savingsAccount);
+        } else {
+            // Print an error message if the account is not a savings account
             ObjectNode node = output.addObject();
             node.put("command", "changeInterestRate");
             ObjectNode outputNode = node.putObject("output");

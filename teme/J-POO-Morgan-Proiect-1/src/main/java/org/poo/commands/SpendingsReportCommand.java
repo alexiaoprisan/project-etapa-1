@@ -2,14 +2,10 @@ package org.poo.commands;
 
 import org.poo.account.Account;
 import org.poo.account.ClassicAccount;
-import org.poo.account.SavingsAccount;
-import org.poo.bankingApp.UserRegistry;
+import org.poo.user.UserRegistry;
 import org.poo.commerciants.Commerciant;
-import org.poo.report.ClassicReport;
 import org.poo.report.PaymentsRecord;
 import org.poo.report.SpendingsReport;
-import org.poo.transaction.Transaction;
-import org.poo.transaction.TransactionReport;
 import org.poo.user.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;

@@ -1,58 +1,72 @@
 package org.poo.card;
 
+/**
+ * This class represents a one-time pay card.
+ * A one-time pay card can only be used once, then it is deleted
+ * and a new card is created to replace it.
+ */
 public class OneTimePayCard implements Card {
     private String cardNumber;
-    private String type = "oneTimePay";
+    private static String type = "oneTimePay";
     private String status;
 
     private boolean used = false;
 
-
-    public OneTimePayCard(String cardNumber) {
+    /**
+     * Constructor for a one-time pay card.
+     * @param cardNumber The card number.
+     */
+    public OneTimePayCard(final String cardNumber) {
         this.cardNumber = cardNumber;
-        this.status = "active"; // Status initializat la "active"
+        this.status = "active";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCardNumber() {
         return cardNumber;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getType() {
         return type;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getStatus() {
         return status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setCardNumber(String cardNumber) {
+    public void setCardNumber(final String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
-    }
-
-
-    public boolean isUsed() {
-        return used;
-    }
-
-    public void useCard() throws IllegalStateException {
-        if (used) {
-            throw new IllegalStateException("The one-time pay card has already been used.");
-        }
-        used = true; // Marcare ca folosit
     }
 
 }

@@ -2,8 +2,8 @@ package org.poo.commands;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.account.Account;
-import org.poo.bankingApp.ExchangeRates;
-import org.poo.bankingApp.UserRegistry;
+import org.poo.exchangeRates.ExchangeRates;
+import org.poo.user.UserRegistry;
 import org.poo.transaction.*;
 import org.poo.user.User;
 

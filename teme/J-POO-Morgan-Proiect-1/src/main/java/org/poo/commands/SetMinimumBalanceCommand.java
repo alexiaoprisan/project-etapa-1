@@ -2,7 +2,7 @@ package org.poo.commands;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.account.Account;
-import org.poo.bankingApp.UserRegistry;
+import org.poo.user.UserRegistry;
 
 public class SetMinimumBalanceCommand implements Command {
     // "command": "setMinimumBalance",

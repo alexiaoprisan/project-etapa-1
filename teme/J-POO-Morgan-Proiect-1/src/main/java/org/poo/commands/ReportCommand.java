@@ -2,8 +2,10 @@ package org.poo.commands;
 
 import org.poo.account.Account;
 import org.poo.account.ClassicAccount;
-import org.poo.bankingApp.UserRegistry;
+import org.poo.account.SavingsAccount;
+import org.poo.user.UserRegistry;
 import org.poo.report.ClassicReport;
+import org.poo.report.SavingsReport;
 import org.poo.user.User;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -48,6 +50,13 @@ public class ReportCommand implements Command {
             ObjectNode node = classicReport.generateReportBetweenTimestamps(startTimestamp, endTimestamp, timestamp, account);
             output.add(node);
 
+        }
+        else {
+            SavingsAccount savingsAccount = (SavingsAccount) account;
+            SavingsReport savingsReport = savingsAccount.getReport();
+
+            ObjectNode node = savingsReport.generateReportBetweenTimestamps(startTimestamp, endTimestamp, timestamp, account);
+            output.add(node);
         }
     }
 

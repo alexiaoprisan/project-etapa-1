@@ -1,10 +1,26 @@
 package org.poo.card;
 
-import org.poo.utils.Utils;
+/**
+ * This class represents a card factory, which can create a card based on the card type.
+ * The card type can be "regular" or "oneTimePay".
+ * <p>
+ * This class cannot be instantiated.
+ */
+public final class CardFactory {
 
-public class CardFactory {
+    // Private constructor to prevent instantiation
+    private CardFactory() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated.");
+    }
 
-    public static Card createCard(String type, String cardNumber) {
+    /**
+     * Creates a card of the specified type.
+     *
+     * @param type       the type of card to create (regular or oneTimePay)
+     * @param cardNumber the card number, which was generated previously
+     * @return the created card
+     */
+    public static Card createCard(final String type, final String cardNumber) {
         switch (type) {
             case "oneTimePay":
                 return new OneTimePayCard(cardNumber);

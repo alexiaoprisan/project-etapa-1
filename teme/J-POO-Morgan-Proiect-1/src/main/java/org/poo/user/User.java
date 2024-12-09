@@ -64,7 +64,7 @@ public class User {
     public void addAccount(String accountType, String currency, String IBAN) {
         AccountFactory.AccountType type = AccountFactory.AccountType.valueOf(accountType);
 
-        Account newAccount = AccountFactory.createAccount(type, currency, IBAN, 0, 0, "alias", 0);
+        Account newAccount = AccountFactory.createAccount(type, currency, IBAN, 0, 0, 0);
         accounts.add(newAccount);
         hasAccount = true;
     }

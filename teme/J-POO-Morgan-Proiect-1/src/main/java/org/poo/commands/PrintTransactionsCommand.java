@@ -1,13 +1,8 @@
 package org.poo.commands;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.poo.account.Account;
-import org.poo.bankingApp.UserRegistry;
-import org.poo.transaction.Transaction;
+import org.poo.user.UserRegistry;
 import org.poo.transaction.TransactionReport;
 import org.poo.user.User;
-import org.poo.card.Card;
-import org.poo.bankingApp.ExchangeRates;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;

@@ -3,30 +3,47 @@ package org.poo.bankingApp;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.commands.Command;
 import org.poo.commands.CommandFactory;
+import org.poo.exchangeRates.ExchangeInputFormat;
+import org.poo.exchangeRates.ExchangeRates;
 import org.poo.fileio.CommandInput;
 import org.poo.fileio.ExchangeInput;
 import org.poo.fileio.ObjectInput;
 import org.poo.fileio.UserInput;
 import org.poo.user.User;
+import org.poo.user.UserRegistry;
 import org.poo.utils.Utils;
 
 public class BankManager {
-    UserRegistry userRegistry = new UserRegistry();
-    ExchangeRates exchangeRates = new ExchangeRates();
+    // holds all the users
+    private UserRegistry userRegistry = new UserRegistry();
 
-    //Commandssss commands = new Commandssss();
-    //CommandsAccount commandsAccount = new CommandsAccount();
-    //CommandsCard commandsCard = new CommandsCard();
+    // holds all the exchange rates
+    private ExchangeRates exchangeRates = new ExchangeRates();
 
-    public void processCommands(ObjectInput inputData, ArrayNode Output) {
+    /**
+     * Process the commands from the input data
+     *
+     * @param inputData the input data to process
+     * @param output    the output node to write the results to
+     */
+    public void processCommands(final ObjectInput inputData, final ArrayNode output) {
+        // reset the random seed for account IBAN and card number generation
         Utils.resetRandom();
+
+        // add all the users to the user registry
         processUsers(inputData);
+
+        // save the exchange rates to the exchange rates registry
         processExchageRates(inputData);
+
+        // try to find new exchange rates based on the existing ones
         exchangeRates.findNewExchangeRates();
 
-        CommandFactory commandFactory = new CommandFactory(userRegistry, Output, exchangeRates);
+        CommandFactory commandFactory = new CommandFactory(userRegistry, output, exchangeRates);
         for (CommandInput input : inputData.getCommands()) {
             String commandType = input.getCommand();
+
+            // create the command using the factory
             Command command = commandFactory.createCommand(commandType, input);
             if (command == null) {
                 continue; // Skip this iteration if the command is null
@@ -36,7 +53,12 @@ public class BankManager {
 
     }
 
-    public void processUsers(ObjectInput inputData) {
+    /**
+     * Process the users from the input data and save them to the user registry
+     *
+     * @param inputData the input data to process
+     */
+    public void processUsers(final ObjectInput inputData) {
         for (UserInput user : inputData.getUsers()) {
             User newUser = new User(user.getFirstName(), user.getLastName(), user.getEmail());
 
@@ -44,9 +66,15 @@ public class BankManager {
         }
     }
 
-    public void processExchageRates(ObjectInput inputData) {
+    /**
+     * Process the exchange rates from the input data and save them
+     * to the exchange rates registry
+     *
+     * @param inputData the input data to process
+     */
+    public void processExchageRates(final ObjectInput inputData) {
 
-        for(ExchangeInput exchange : inputData.getExchangeRates()) {
+        for (ExchangeInput exchange : inputData.getExchangeRates()) {
             ExchangeInputFormat exchangeInputData = new ExchangeInputFormat();
             exchangeInputData.setFrom(exchange.getFrom());
             exchangeInputData.setTo(exchange.getTo());
