@@ -70,6 +70,8 @@ public class SplitPaymentCommand implements  Command {
                         amount, currency, accountsIBAN.toArray(new String[0]), "Account " + poorAccount + " has insufficient funds for a split payment."
                 );
                 user.addTransaction(transaction);
+                Account account = userRegistry.getAccountByIBAN(accountIBAN);
+                account.addTransaction(transaction);
             }
 
             return; // Exit if any account does not have enough balance

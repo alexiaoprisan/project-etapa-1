@@ -70,6 +70,9 @@ public class SendMoneyCommand implements Command {
 
         if (currencyFrom.equals(currencyTo)) {
             if (giverAccount.getBalance() < amount) {
+                Transaction transaction = new InsufficientFunds(timestamp, "Insufficient funds");
+                giver.addTransaction(transaction);
+                giverAccount.addTransaction(transaction);
                 return;
             }
 
@@ -79,6 +82,9 @@ public class SendMoneyCommand implements Command {
             Transaction receiverTransaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amount, currencyTo, "received");
             giver.addTransaction(transaction);
             receiver.addTransaction(receiverTransaction);
+
+            giverAccount.addTransaction(transaction);
+            receiverAccount.addTransaction(receiverTransaction);
             return;
         }
 
@@ -89,6 +95,8 @@ public class SendMoneyCommand implements Command {
         if (giverAccount.getBalance() < amount) {
             Transaction transaction = new InsufficientFunds(timestamp, "Insufficient funds");
             giver.addTransaction(transaction);
+
+            giverAccount.addTransaction(transaction);
             return;
         }
 
@@ -100,9 +108,9 @@ public class SendMoneyCommand implements Command {
         Transaction receiverTransaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amountToTransfer, currencyTo, "received");
         giver.addTransaction(transaction);
         receiver.addTransaction(receiverTransaction);
+        giverAccount.addTransaction(transaction);
+        receiverAccount.addTransaction(receiverTransaction);
 
-        Account account = userRegistry.getAccountByIBAN(giverIBAN);
-        account.addTransaction(transaction);
 
     }
 }

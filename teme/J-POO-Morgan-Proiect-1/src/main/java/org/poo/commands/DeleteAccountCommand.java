@@ -2,6 +2,8 @@ package org.poo.commands;
 
 import org.poo.account.Account;
 import org.poo.bankingApp.UserRegistry;
+import org.poo.transaction.ErrorDeleteAccount;
+import org.poo.transaction.Transaction;
 import org.poo.user.User;
 import org.poo.card.Card;
 
@@ -45,6 +47,8 @@ public class DeleteAccountCommand implements Command {
 
                 output.put("timestamp", timestamp);
 
+                Transaction transaction = new ErrorDeleteAccount(timestamp, "Account couldn't be deleted - there are funds remaining");
+                user.addTransaction(transaction);
                 return;
             }
             else {

@@ -34,6 +34,10 @@ public class ChangeInterestRateCommand implements Command {
         if(account.getType().equals("savings")) {
             SavingsAccount savingsAccount = (SavingsAccount) account;
             savingsAccount.setInterestRate(interestRate);
+
+            Transaction transaction = new InterestRateChange(timestamp, "Interest rate of the account changed to " + interestRate);
+            User user = userRegistry.getUserByIBAN(accountIBAN);
+            user.addTransaction(transaction);
         }
         else {
             ObjectNode node = output.addObject();

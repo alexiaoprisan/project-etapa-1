@@ -2,11 +2,13 @@ package org.poo.commands;
 
 import org.poo.account.Account;
 import org.poo.account.ClassicAccount;
+import org.poo.account.SavingsAccount;
 import org.poo.bankingApp.UserRegistry;
 import org.poo.commerciants.Commerciant;
 import org.poo.report.ClassicReport;
 import org.poo.report.PaymentsRecord;
 import org.poo.report.SpendingsReport;
+import org.poo.transaction.Transaction;
 import org.poo.transaction.TransactionReport;
 import org.poo.user.User;
 
@@ -59,6 +61,14 @@ public class SpendingsReportCommand implements Command {
 
             ObjectNode node = spendingsReport.generateSpendingsReportBetweenTimestamps(startTimestamp, endTimestamp, timestamp, account, commerciantsList);
             output.add(node);
+        }
+        else {
+
+            ObjectNode node = output.addObject();
+            node.put("command", "spendingsReport");
+            ObjectNode outputNode = node.putObject("output");
+            outputNode.put("error", "This kind of report is not supported for a saving account");
+            node.put("timestamp", timestamp);
         }
 
     }

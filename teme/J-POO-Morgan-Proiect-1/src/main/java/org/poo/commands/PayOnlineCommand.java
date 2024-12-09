@@ -113,6 +113,12 @@ public class PayOnlineCommand implements Command {
                     if (card.getType().equals("oneTimePay")) {
                         String newCardNumber = Utils.generateCardNumber();
                         card.setCardNumber(newCardNumber);
+
+                        Transaction transactionCardDestroyed = new CardDestroyed(timestamp, "The card has been destroyed", account.getIBAN(), cardNumber, user.getEmail());
+                        user.addTransaction(transactionCardDestroyed);
+
+                        Transaction transactionNewCard = new NewCardCreatedTransaction(timestamp, "New card created", account.getIBAN(), newCardNumber, user.getEmail());
+                        user.addTransaction(transactionNewCard);
                     }
 
                 } else {
