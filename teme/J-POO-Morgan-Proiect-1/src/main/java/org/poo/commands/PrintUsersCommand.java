@@ -8,32 +8,48 @@ import org.poo.card.Card;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/**
+ * Command to print all users and their accounts and cards.
+ */
 public class PrintUsersCommand implements Command {
 
     private final UserRegistry userRegistry;
-    private final ArrayNode Output;
+    private final ArrayNode output;
     private final int timestamp;
 
-    public PrintUsersCommand(UserRegistry userRegistry, ArrayNode output, int timestamp) {
+    /**
+     * Constructor for the PrintUsersCommand.
+     *
+     * @param userRegistry The user registry.
+     * @param output       The output.
+     * @param timestamp    The timestamp.
+     */
+    public PrintUsersCommand(final UserRegistry userRegistry,
+                             final ArrayNode output,
+                             final int timestamp) {
         this.userRegistry = userRegistry;
-        this.Output = output;
+        this.output = output;
         this.timestamp = timestamp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        ObjectNode output = Output.addObject();
-        output.put("command", "printUsers");
+        ObjectNode outputNode = output.addObject();
+        outputNode.put("command", "printUsers");
 
-        ArrayNode usersArray = output.putArray("output");
+        ArrayNode usersArray = outputNode.putArray("output");
 
+        // Iterate over all users and print their information
         for (User user : userRegistry.getUsers()) {
             ObjectNode userNode = usersArray.addObject();
             userNode.put("firstName", user.getFirstName());
             userNode.put("lastName", user.getLastName());
             userNode.put("email", user.getEmail());
 
-            if (user.userHasAccount() == true) {
+            if (user.userHasAccount()) { // Simplified boolean expression
                 ArrayNode accountsArray = userNode.putArray("accounts");
 
                 for (Account account : user.getAccounts()) {
@@ -43,7 +59,7 @@ public class PrintUsersCommand implements Command {
                     accountNode.put("currency", account.getCurrency());
                     accountNode.put("type", account.getType());
 
-                    if(account.hasCards() == true) {
+                    if (account.hasCards()) { // Simplified boolean expression
                         ArrayNode cardsArray = accountNode.putArray("cards");
 
                         for (Card card : account.getCards()) {
@@ -51,23 +67,14 @@ public class PrintUsersCommand implements Command {
                             cardNode.put("cardNumber", card.getCardNumber());
                             cardNode.put("status", card.getStatus());
                         }
-                    }
-                    else {
+                    } else {
                         accountNode.putArray("cards");
                     }
-
                 }
-            }
-            else {
+            } else {
                 userNode.putArray("accounts");
             }
         }
-        output.put("timestamp", timestamp);
+        outputNode.put("timestamp", timestamp);
     }
-
-
-
-
-
-
 }

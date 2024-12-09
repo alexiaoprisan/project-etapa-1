@@ -137,4 +137,22 @@ public final class UserRegistry {
         }
         return null;
     }
+
+    /**
+     * Finds a user by their account alias, searching through all users.
+     *
+     * @param alias the alias of the account.
+     * @return the user who owns the account, or null if not found.
+     */
+    public User getUserByAlias(final String alias) {
+        for (final User user : users) {
+            for (final Account account : user.getAccounts()) {
+                if (account.getAlias() != null && account.getAlias().equals(alias)) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
 }

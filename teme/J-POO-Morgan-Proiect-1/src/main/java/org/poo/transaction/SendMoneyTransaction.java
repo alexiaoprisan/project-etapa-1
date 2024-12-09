@@ -2,6 +2,9 @@ package org.poo.transaction;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/**
+ * Class that represents a transaction of sending money from one account to another
+ */
 public class SendMoneyTransaction extends Transaction {
     private final String senderIBAN;
     private final String receiverIBAN;
@@ -9,7 +12,13 @@ public class SendMoneyTransaction extends Transaction {
     private final String transferType;
     private final String currency;
 
-    public SendMoneyTransaction(int timestamp, String description, String sender, String receiver, double amount, String currency, String transferType) {
+    public SendMoneyTransaction(final int timestamp,
+                                final String description,
+                                final String sender, final
+                                String receiver,
+                                final double amount,
+                                final String currency,
+                                final String transferType) {
         super(timestamp, description);
         this.senderIBAN = sender;
         this.receiverIBAN = receiver;

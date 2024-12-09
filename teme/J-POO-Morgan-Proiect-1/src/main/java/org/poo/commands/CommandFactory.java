@@ -65,7 +65,7 @@ public class CommandFactory {
                         input.getEmail(), input.getAccount());
 
             case "deleteCard":
-                return new DeleteCardCommand(userRegistry, output, timestamp,
+                return new DeleteCardCommand(userRegistry, timestamp,
                         input.getEmail(), input.getCardNumber());
 
             case "payOnline":

@@ -32,5 +32,8 @@ public class SetAliasCommand implements Command {
             return;
         }
 
+       account.setAlias(alias);
+       // System.out.println(account.getAlias());
+
     }
 }

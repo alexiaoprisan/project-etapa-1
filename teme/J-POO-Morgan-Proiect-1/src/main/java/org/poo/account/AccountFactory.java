@@ -26,6 +26,7 @@ public final class AccountFactory {
      * @param currency     the currency of the account
      * @param iban         the IBAN of the account
      * @param balance      the initial balance of the account
+     * @param alias        the alias of the account
      * @param minBalance   the minimum balance of the account
      *                     (the balance cannot go below this value)
      * @param interestRate the interest rate (only applicable for savings accounts)
@@ -37,6 +38,7 @@ public final class AccountFactory {
                                         final String iban,
                                         final double balance,
                                         final double minBalance,
+                                        final String alias,
                                         final double interestRate) {
         switch (accountType) {
             case classic:
