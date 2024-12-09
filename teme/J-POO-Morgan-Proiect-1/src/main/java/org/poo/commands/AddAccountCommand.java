@@ -9,6 +9,7 @@ import org.poo.card.Card;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.poo.utils.Utils;
 
 public class AddAccountCommand implements Command {
     private final UserRegistry userRegistry;
@@ -30,9 +31,15 @@ public class AddAccountCommand implements Command {
     @Override
     public void execute() {
         User user = userRegistry.getUserByEmail(email);
-        user.addAccount(accountType, currency);
+        String IBAN = Utils.generateIBAN();
+        user.addAccount(accountType, currency, IBAN);
 
         Transaction transaction = new NewAccountCreated(timestamp, "New account created");
         user.addTransaction(transaction);
+
+        Account account = user.getAccountByIBAN(IBAN);
+
+        account.addTransaction(transaction);
+
     }
 }

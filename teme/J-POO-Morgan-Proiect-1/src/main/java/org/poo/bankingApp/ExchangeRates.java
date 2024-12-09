@@ -1,6 +1,6 @@
 package org.poo.bankingApp;
 
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class ExchangeRates {
@@ -35,33 +35,39 @@ public class ExchangeRates {
 
 
     public double convertExchangeRate(String currencyFrom, String currencyTo) {
-        // Direct exchange rate
+        // Build the graph
+        Map<String, List<ExchangeInputFormat>> graph = new HashMap<>();
         for (ExchangeInputFormat exchange : exchangeRates) {
-            if (exchange.getFrom().equals(currencyFrom) && exchange.getTo().equals(currencyTo)) {
-                return exchange.getRate();
-            }
+            graph.computeIfAbsent(exchange.getFrom(), k -> new ArrayList<>()).add(exchange);
         }
 
-        // Reverse exchange rate
-        for (ExchangeInputFormat exchange : exchangeRates) {
-            if (exchange.getFrom().equals(currencyTo) && exchange.getTo().equals(currencyFrom)) {
-                ExchangeInputFormat reverseExchange = new ExchangeInputFormat(currencyTo, currencyFrom, 1.0 / exchange.getRate(), exchange.getTimestamp());
-                exchangeRates.add(reverseExchange);
+        // BFS to find the exchange rate
+        Queue<ExchangePath> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        queue.add(new ExchangePath(currencyFrom, 1.0));
 
-                return 1.0 / exchange.getRate();
-            }
-        }
+        while (!queue.isEmpty()) {
+            ExchangePath current = queue.poll();
+            String currentCurrency = current.currency;
+            double currentRate = current.rate;
 
-        // Two-step conversion
-        for (ExchangeInputFormat firstExchange : exchangeRates) {
-            if (firstExchange.getFrom().equals(currencyFrom)) {
-                for (ExchangeInputFormat secondExchange : exchangeRates) {
-                    if (secondExchange.getFrom().equals(firstExchange.getTo()) && secondExchange.getTo().equals(currencyTo)) {
-                        // add the new exchange rate in
-                        ExchangeInputFormat newExchange = new ExchangeInputFormat(currencyFrom, currencyTo, firstExchange.getRate() * secondExchange.getRate(), firstExchange.getTimestamp());
-                        exchangeRates.add(newExchange);
-                        return firstExchange.getRate() * secondExchange.getRate();
-                    }
+            // Mark as visited
+            visited.add(currentCurrency);
+
+            // Check neighbors
+            List<ExchangeInputFormat> neighbors = graph.getOrDefault(currentCurrency, Collections.emptyList());
+            for (ExchangeInputFormat neighbor : neighbors) {
+                String nextCurrency = neighbor.getTo();
+                double nextRate = currentRate * neighbor.getRate();
+
+                // If target is found
+                if (nextCurrency.equals(currencyTo)) {
+                    return nextRate;
+                }
+
+                // Add to queue if not visited
+                if (!visited.contains(nextCurrency)) {
+                    queue.add(new ExchangePath(nextCurrency, nextRate));
                 }
             }
         }
@@ -69,6 +75,18 @@ public class ExchangeRates {
         // No conversion rate available
         return 0;
     }
+
+    // Helper class for BFS
+    private static class ExchangePath {
+        String currency;
+        double rate;
+
+        ExchangePath(String currency, double rate) {
+            this.currency = currency;
+            this.rate = rate;
+        }
+    }
+
 
 
 }

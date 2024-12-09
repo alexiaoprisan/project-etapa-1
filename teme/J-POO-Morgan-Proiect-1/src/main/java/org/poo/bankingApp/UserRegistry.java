@@ -81,4 +81,15 @@ public class UserRegistry {
         return null;
     }
 
+    public User getUserByIBAN(String IBAN) {
+        for (User user : users) {
+            for (Account account : user.getAccounts()) {
+                if (account.getIBAN().equals(IBAN)) {
+                    return user;
+                }
+            }
+        }
+        return null;
+    }
+
 }

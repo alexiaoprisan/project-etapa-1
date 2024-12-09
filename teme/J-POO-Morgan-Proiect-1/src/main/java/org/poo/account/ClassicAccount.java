@@ -2,7 +2,10 @@ package org.poo.account;
 
 import org.poo.card.Card;
 import org.poo.card.CardFactory;
-import org.poo.utils.Utils;
+import org.poo.commerciants.Commerciant;
+import org.poo.report.ClassicReport;
+import org.poo.report.PaymentsRecord;
+import org.poo.transaction.Transaction;
 
 import java.util.ArrayList;
 
@@ -14,7 +17,9 @@ public class ClassicAccount implements Account {
     private double minBalance;
     private String alias;
 
-    private double interestRate;
+    private ArrayList<Commerciant> commerciantsList = new ArrayList<>();
+    private ClassicReport report = new ClassicReport();
+    private PaymentsRecord paymentsRecord = new PaymentsRecord();
 
     private ArrayList<Card> cards = new ArrayList<>();
 
@@ -100,14 +105,6 @@ public class ClassicAccount implements Account {
         this.accountType = type;
     }
 
-    public double getInterestRate() {
-        return interestRate;
-    }
-
-    public void setInterestRate(double interestRate) {
-        this.interestRate = interestRate;
-    }
-
     public void addCard(Card card) {
         cards.add(card);
     }
@@ -143,6 +140,50 @@ public class ClassicAccount implements Account {
             }
         }
         return null;
+    }
+
+    public ArrayList<Commerciant> getCommerciantList() {
+        return commerciantsList;
+    }
+
+    public void addCommerciant(Commerciant commerciant) {
+        // Check for duplicate
+        for (Commerciant c : commerciantsList) {
+            if (c.getName().equals(commerciant.getName())) {
+                return; // Do not add duplicate
+            }
+        }
+
+        // Find the correct position to insert
+        int index = 0;
+        for (Commerciant c : commerciantsList) {
+            if (c.getName().compareTo(commerciant.getName()) > 0) {
+                break; // Found the position where commerciant should be inserted
+            }
+            index++;
+        }
+
+        // Add to the list at the calculated position
+        commerciantsList.add(index, commerciant);
+    }
+
+
+    public ClassicReport getReport() {
+        return report;
+    }
+
+    @Override
+    public void addTransaction(Transaction transaction) {
+        // Update the balance
+        report.addTransaction(transaction);
+    }
+
+    public void addPayment(Transaction transaction) {
+        paymentsRecord.addTransaction(transaction);
+    }
+
+    public PaymentsRecord getPaymentsRecord() {
+        return paymentsRecord;
     }
 
 }

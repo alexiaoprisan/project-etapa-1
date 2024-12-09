@@ -36,11 +36,11 @@ public class CommandFactory {
 
             case "createCard":
                 return new CreateCardCommand(userRegistry, output, timestamp,
-                        input.getEmail(), input.getAccount(), "regular");
+                        input.getEmail(), input.getAccount(), "createCard");
 
             case "createOneTimeCard":
                 return new CreateCardCommand(userRegistry, output, timestamp,
-                        input.getEmail(), input.getAccount(), "oneTimePay");
+                        input.getEmail(), input.getAccount(), "createOneTimeCard");
 
             case "addFunds":
                 return new AddFundsCommand(userRegistry, output, timestamp,
@@ -78,6 +78,26 @@ public class CommandFactory {
             case "setMinimumBalance":
                 return new SetMinimumBalanceCommand(userRegistry, output, timestamp,
                         input.getAccount(), input.getAmount());
+
+            case "splitPayment":
+                return new SplitPaymentCommand(userRegistry, output, timestamp,
+                        input.getAmount(), input.getCurrency(), input.getAccounts(), exchangeRates);
+
+            case "changeInterestRate":
+                return new ChangeInterestRateCommand(userRegistry, output, timestamp,
+                        input.getAccount(), input.getInterestRate());
+
+            case "addInterest":
+                return new AddInterestCommand(userRegistry, output, timestamp,
+                        input.getAccount());
+
+            case "report":
+                return new ReportCommand(userRegistry, output, input.getStartTimestamp(), input.getEndTimestamp(),
+                        input.getAccount(), timestamp);
+
+            case "spendingsReport":
+                return new SpendingsReportCommand(userRegistry, output, input.getStartTimestamp(), input.getEndTimestamp(),
+                        input.getAccount(), timestamp);
 
             default:
                 // Log unknown command type and skip

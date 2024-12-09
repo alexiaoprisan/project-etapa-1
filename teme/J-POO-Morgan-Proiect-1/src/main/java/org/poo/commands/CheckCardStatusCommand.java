@@ -54,6 +54,7 @@ public class CheckCardStatusCommand implements Command {
             Transaction transaction = new WarningForPay(timestamp, "You have reached the minimum amount of funds, the card will be frozen");
             user.addTransaction(transaction);
             card.setStatus("frozen");
+            account.addTransaction(transaction);
         }
 
 

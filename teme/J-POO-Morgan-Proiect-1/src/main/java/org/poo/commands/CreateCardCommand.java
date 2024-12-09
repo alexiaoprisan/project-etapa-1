@@ -55,7 +55,20 @@ public class CreateCardCommand implements Command {
             }
         }
 
+        for (Account account : user.getAccounts()) {
+            for (Card card : account.getCards()) {
+                if (card.getCardNumber().equals(cardNumber)) {
+                    Card newCard = card;
+                }
+            }
+        }
+
+
+
         Transaction transaction = new NewCardCreatedTransaction(timestamp, "New card created", IBAN, cardNumber, email);
         user.addTransaction(transaction);
+
+        Account account = user.getAccountByIBAN(IBAN);
+        account.addTransaction(transaction);
     }
 }

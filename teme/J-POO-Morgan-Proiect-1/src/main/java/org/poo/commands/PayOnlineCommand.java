@@ -1,7 +1,12 @@
 package org.poo.commands;
 
 import org.poo.account.Account;
+import org.poo.account.ClassicAccount;
 import org.poo.bankingApp.UserRegistry;
+import org.poo.card.OneTimePayCard;
+import org.poo.commerciants.Commerciant;
+import org.poo.report.ClassicReport;
+import org.poo.report.PaymentsRecord;
 import org.poo.transaction.*;
 import org.poo.user.User;
 import org.poo.card.Card;
@@ -9,6 +14,7 @@ import org.poo.bankingApp.ExchangeRates;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.poo.utils.Utils;
 
 public class PayOnlineCommand implements Command {
     private final UserRegistry userRegistry;
@@ -64,44 +70,60 @@ public class PayOnlineCommand implements Command {
                     }
                 }
 
-                if(card.getStatus().equals("frozen")) {
+                if (card.getStatus().equals("frozen")) {
                     Transaction transaction = new FrozenCard(timestamp, "The card is frozen");
                     user.addTransaction(transaction);
                     return;
                 }
 
-                 if (account.getBalance() >= amount) {
+                if (account.getBalance() >= amount) {
 
-                     if (account.getBalance() - amount <= account.getMinBalance()) {
-                         card.setStatus("frozen");
-                         Transaction transactionErorr = new WarningForPay(timestamp, "You have reached the minimum amount of funds, the card will be frozen");
-                         user.addTransaction(transactionErorr);
-                         return;
-                     }
+                    if (account.getBalance() - amount <= account.getMinBalance()) {
+                        card.setStatus("frozen");
+                        Transaction transactionErorr = new WarningForPay(timestamp, "You have reached the minimum amount of funds, the card will be frozen");
+                        user.addTransaction(transactionErorr);
+                        return;
+                    }
 
-                     if (account.getBalance()  - account.getMinBalance() - amount < 30) {
-                         Transaction transactionErorr = new WarningForPay(timestamp, "You have reached the minimum amount of funds, the card will be frozen");
-                         user.addTransaction(transactionErorr);
-                         card.setStatus("warning");
-                         return;
-                     }
+                    if (account.getBalance() - account.getMinBalance() - amount < 30) {
+                        Transaction transactionErorr = new WarningForPay(timestamp, "You have reached the minimum amount of funds, the card will be frozen");
+                        user.addTransaction(transactionErorr);
+                        card.setStatus("warning");
+                        return;
+                    }
 
-                     account.setBalance(account.getBalance() - amount);
+                    account.setBalance(account.getBalance() - amount);
 
-                     Transaction transaction = new CardPaymentTransaction(timestamp, "Card payment", amount, commerciant);
-                     user.addTransaction(transaction);
+                    Transaction transaction = new CardPaymentTransaction(timestamp, "Card payment", amount, commerciant);
+                    user.addTransaction(transaction);
 
-                 }
-                 else {
-                     Transaction transaction = new InsufficientFunds(timestamp, "Insufficient funds");
-                     user.addTransaction(transaction);
-                 }
+                    if (account.getType().equals("classic")) {
+                        Commerciant newCommerciant = new Commerciant(commerciant, amount, timestamp);
+
+                        ClassicAccount classicAccount = (ClassicAccount) account;
+                        ClassicReport report = classicAccount.getReport();
+                        PaymentsRecord paymentsRecord = classicAccount.getPaymentsRecord();
+
+                        report.addTransaction(transaction);
+                        paymentsRecord.addTransaction(transaction);
+
+                        classicAccount.addCommerciant(newCommerciant);
+                    }
+
+                    if (card.getType().equals("oneTimePay")) {
+                        String newCardNumber = Utils.generateCardNumber();
+                        card.setCardNumber(newCardNumber);
+                    }
+
+                } else {
+                    Transaction transaction = new InsufficientFunds(timestamp, "Insufficient funds");
+                    user.addTransaction(transaction);
+                }
+
             }
         }
 
-
-
-        if(foundCard == 0) {
+        if (foundCard == 0) {
             ObjectNode outputNode = output.addObject();
             outputNode.put("command", "payOnline");
             ObjectNode outputObject = outputNode.putObject("output");

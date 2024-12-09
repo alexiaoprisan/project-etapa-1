@@ -1,6 +1,8 @@
 package org.poo.account;
 
 import org.poo.card.Card;
+import org.poo.transaction.Transaction;
+
 import java.util.ArrayList;
 
 public interface Account {
@@ -25,6 +27,7 @@ public interface Account {
     void createCard(String type, String cardNumber);
     boolean hasCards();
     Card getCardByNumber(String cardNumber);
+    void addTransaction(Transaction transaction);
 
     ArrayList<Card> getCards();
 }

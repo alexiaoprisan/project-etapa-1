@@ -35,15 +35,15 @@ public class SendMoneyCommand implements Command {
     @Override
     public void execute() {
 
-        User user = userRegistry.getUserByEmail(email);
-        if (user == null) {
+        User giver = userRegistry.getUserByEmail(email);
+        if (giver == null) {
             return;
         }
 
-        Account giverAccount = user.getAccountByIBAN(giverIBAN);
+        Account giverAccount = giver.getAccountByIBAN(giverIBAN);
 
         if (giverAccount == null) {
-            giverAccount = user.getAccountByAlias(giverIBAN);
+            giverAccount = giver.getAccountByAlias(giverIBAN);
         }
 
         if (giverAccount == null) {
@@ -51,6 +51,8 @@ public class SendMoneyCommand implements Command {
         }
 
         Account receiverAccount = userRegistry.getAccountByIBAN(receiverIBAN);
+
+        User receiver = userRegistry.getUserByIBAN(receiverIBAN);
 
 
         if (receiverAccount == null) {
@@ -73,8 +75,10 @@ public class SendMoneyCommand implements Command {
 
             giverAccount.setBalance(giverAccount.getBalance() - amount);
             receiverAccount.setBalance(receiverAccount.getBalance() + amount);
-            Transaction transaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amount, currencyFrom);
-            user.addTransaction(transaction);
+            Transaction transaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amount, currencyFrom, "sent");
+            Transaction receiverTransaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amount, currencyTo, "received");
+            giver.addTransaction(transaction);
+            receiver.addTransaction(receiverTransaction);
             return;
         }
 
@@ -84,7 +88,7 @@ public class SendMoneyCommand implements Command {
 
         if (giverAccount.getBalance() < amount) {
             Transaction transaction = new InsufficientFunds(timestamp, "Insufficient funds");
-            user.addTransaction(transaction);
+            giver.addTransaction(transaction);
             return;
         }
 
@@ -92,8 +96,13 @@ public class SendMoneyCommand implements Command {
         receiverAccount.setBalance(receiverAccount.getBalance() + amountToTransfer);
 
 
-        Transaction transaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amount, currencyFrom);
-        user.addTransaction(transaction);
+        Transaction transaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amount, currencyFrom, "sent");
+        Transaction receiverTransaction = new SendMoneyTransaction(timestamp, description, giverIBAN, receiverIBAN, amountToTransfer, currencyTo, "received");
+        giver.addTransaction(transaction);
+        receiver.addTransaction(receiverTransaction);
+
+        Account account = userRegistry.getAccountByIBAN(giverIBAN);
+        account.addTransaction(transaction);
 
     }
 }

@@ -2,6 +2,9 @@ package org.poo.account;
 
 import org.poo.card.Card;
 import org.poo.card.CardFactory;
+import org.poo.report.ClassicReport;
+import org.poo.report.SavingsReport;
+import org.poo.transaction.Transaction;
 import org.poo.utils.Utils;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ public class SavingsAccount implements Account {
     private double minBalance;
     private String alias;
     private double interestRate; // Unique field for SavingsAccount
+    private SavingsReport report = new SavingsReport();
 
     private ArrayList<Card> cards = new ArrayList<>();
 
@@ -145,5 +149,11 @@ public class SavingsAccount implements Account {
             }
         }
         return null;
+    }
+
+    @Override
+    public void addTransaction(Transaction transaction) {
+        // Update the balance
+       // report.addTransaction(transaction);
     }
 }

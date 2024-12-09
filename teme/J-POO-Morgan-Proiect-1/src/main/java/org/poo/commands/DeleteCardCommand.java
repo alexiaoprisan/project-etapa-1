@@ -39,6 +39,8 @@ public class DeleteCardCommand implements Command {
                 account.getCards().remove(card);
                 Transaction transaction = new CardDestroyed(timestamp, "The card has been destroyed", account.getIBAN(), cardNumber, user.getEmail());
                 user.addTransaction(transaction);
+
+                account.addTransaction(transaction);
                 return;
             }
         }

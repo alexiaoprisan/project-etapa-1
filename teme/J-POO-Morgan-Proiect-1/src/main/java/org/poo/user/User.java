@@ -1,14 +1,11 @@
 package org.poo.user;
 
-import org.poo.card.Card;
 import org.poo.account.Account;
 import org.poo.account.AccountFactory;
-import org.poo.account.ClassicAccount;
-import org.poo.account.SavingsAccount;
+import org.poo.commerciants.Commerciant;
 import org.poo.transaction.TransactionReport;
 import org.poo.utils.Utils;
 import org.poo.transaction.Transaction;
-import org.poo.transaction.TransactionReport;
 
 import java.util.*;
 
@@ -64,10 +61,9 @@ public class User {
         return accounts;
     }
 
-    public void addAccount(String accountType, String currency) {
+    public void addAccount(String accountType, String currency, String IBAN) {
         AccountFactory.AccountType type = AccountFactory.AccountType.valueOf(accountType);
 
-        String IBAN = Utils.generateIBAN();
         Account newAccount = AccountFactory.createAccount(type, currency, IBAN, 0, 0, "alias", 0);
         accounts.add(newAccount);
         hasAccount = true;
@@ -118,6 +114,9 @@ public class User {
     public void addTransaction(Transaction transaction) {
         transactionReport.addTransaction(transaction);
     }
+
+
+
 
 
 }

@@ -2,6 +2,8 @@ package org.poo.transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.poo.account.Account;
+import org.poo.commerciants.Commerciant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,4 +42,5 @@ public class TransactionReport {
             throw new RuntimeException("Error generating report", e);
         }
     }
+
 }
