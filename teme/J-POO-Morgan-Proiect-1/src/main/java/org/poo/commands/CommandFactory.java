@@ -83,7 +83,7 @@ public class CommandFactory {
                         input.getEmail());
 
             case "setAlias":
-                return new SetAliasCommand(userRegistry, output, timestamp,
+                return new SetAliasCommand(userRegistry, timestamp,
                         input.getEmail(), input.getAccount(), input.getAlias());
 
             case "checkCardStatus":
@@ -91,7 +91,7 @@ public class CommandFactory {
                         input.getCardNumber(), timestamp);
 
             case "setMinimumBalance":
-                return new SetMinimumBalanceCommand(userRegistry, output, timestamp,
+                return new SetMinimumBalanceCommand(userRegistry, timestamp,
                         input.getAccount(), input.getAmount());
 
             case "splitPayment":

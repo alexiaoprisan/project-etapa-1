@@ -1,36 +1,47 @@
 package org.poo.commands;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.account.Account;
 import org.poo.user.UserRegistry;
 
+/**
+ * Command class for setting the minimum balance of an account.
+ * The account needs to be a SavingsAccount.
+ */
 public class SetMinimumBalanceCommand implements Command {
-    // "command": "setMinimumBalance",
-    //            "account": "RO58POOB7344468893732422",
-    //            "amount": 200,
-    //            "timestamp": 5
-
     private final UserRegistry userRegistry;
-    private final ArrayNode output;
     private final int timestamp;
-    private final String IBAN;
+    private final String iban;
     private final double amount;
 
-    public SetMinimumBalanceCommand(UserRegistry userRegistry, ArrayNode output, int timestamp, String account, double amount) {
+    /**
+     * Constructor for the SetMinimumBalanceCommand class.
+     *
+     * @param userRegistry the UserRegistry object
+     * @param timestamp    the timestamp
+     * @param account      the IBAN of the account
+     * @param amount       the minimum balance
+     */
+    public SetMinimumBalanceCommand(final UserRegistry userRegistry,
+                                    final int timestamp,
+                                    final String account,
+                                    final double amount) {
         this.userRegistry = userRegistry;
-        this.output = output;
         this.timestamp = timestamp;
-        this.IBAN = account;
+        this.iban = account;
         this.amount = amount;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        Account account = userRegistry.getAccountByIBAN(IBAN);
+        Account account = userRegistry.getAccountByIBAN(iban);
         if (account == null) {
             return;
         }
 
+        // Set the minimum balance of the account
         account.setMinBalance(amount);
 
     }

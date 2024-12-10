@@ -1,92 +1,136 @@
 package org.poo.exchangeRates;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+import java.util.HashSet;
 
+/**
+ * Represents a collection of exchange rates and provides utilities
+ * to add, find, and convert exchange rates between currencies.
+ */
+public final class ExchangeRates {
 
-public class ExchangeRates {
-    ArrayList<ExchangeInputFormat> exchangeRates = new ArrayList<>();
+    private final ArrayList<ExchangeInputFormat> exchangeRates = new ArrayList<>();
 
-    public void addExchangeRate(ExchangeInputFormat exchangeInput) {
+    /**
+     * Adds a new exchange rate.
+     *
+     * @param exchangeInput the exchange rate to add
+     */
+    public void addExchangeRate(final ExchangeInputFormat exchangeInput) {
         exchangeRates.add(exchangeInput);
     }
 
+    /**
+     * Returns the list of exchange rates.
+     *
+     * @return the list of exchange rates
+     */
     public ArrayList<ExchangeInputFormat> getExchangeRates() {
-        return exchangeRates;
+        return new ArrayList<>(exchangeRates);
     }
 
-    public void addExchangeRates(ExchangeInputFormat exchangeInput) {
+    /**
+     * Adds a new exchange rate to the list.
+     *
+     * @param exchangeInput the exchange rate to add
+     */
+    public void addExchangeRates(final ExchangeInputFormat exchangeInput) {
         exchangeRates.add(exchangeInput);
     }
 
+    /**
+     * Finds and adds reciprocal exchange rates to the collection.
+     */
     public void findNewExchangeRates() {
-        ArrayList<ExchangeInputFormat> newRates = new ArrayList<>(); // Temporary list for new exchanges
+        ArrayList<ExchangeInputFormat> newRates = new ArrayList<>();
 
         for (ExchangeInputFormat exchange : exchangeRates) {
             if (exchange.getRate() == 0) {
                 continue;
             }
             double amount = 1.0 / exchange.getRate();
-            ExchangeInputFormat newExchange = new ExchangeInputFormat(exchange.getTo(), exchange.getFrom(), amount, exchange.getTimestamp());
-            newRates.add(newExchange); // Add new exchange to the temporary list
+            ExchangeInputFormat newExchange = new ExchangeInputFormat(
+                    exchange.getTo(), exchange.getFrom(), amount, exchange.getTimestamp());
+            newRates.add(newExchange);
         }
-        // Add all new exchange rates to the original list after the loop
+
         exchangeRates.addAll(newRates);
     }
 
-
-    public double convertExchangeRate(String currencyFrom, String currencyTo) {
-        // Build the graph
+    /**
+     * Converts an exchange rate between two currencies using a graph-based approach.
+     *
+     * @param currencyFrom the source currency
+     * @param currencyTo   the target currency
+     * @return the converted exchange rate, or 0 if not available
+     */
+    public double convertExchangeRate(final String currencyFrom, final String currencyTo) {
         Map<String, List<ExchangeInputFormat>> graph = new HashMap<>();
         for (ExchangeInputFormat exchange : exchangeRates) {
             graph.computeIfAbsent(exchange.getFrom(), k -> new ArrayList<>()).add(exchange);
         }
 
-        // BFS to find the exchange rate
         Queue<ExchangePath> queue = new LinkedList<>();
         Set<String> visited = new HashSet<>();
         queue.add(new ExchangePath(currencyFrom, 1.0));
 
         while (!queue.isEmpty()) {
             ExchangePath current = queue.poll();
-            String currentCurrency = current.currency;
-            double currentRate = current.rate;
+            String currentCurrency = current.getCurrency();
+            double currentRate = current.getRate();
 
-            // Mark as visited
             visited.add(currentCurrency);
 
-            // Check neighbors
-            List<ExchangeInputFormat> neighbors = graph.getOrDefault(currentCurrency, Collections.emptyList());
+            List<ExchangeInputFormat> neighbors = graph.getOrDefault(currentCurrency,
+                    Collections.emptyList());
             for (ExchangeInputFormat neighbor : neighbors) {
                 String nextCurrency = neighbor.getTo();
                 double nextRate = currentRate * neighbor.getRate();
 
-                // If target is found
                 if (nextCurrency.equals(currencyTo)) {
                     return nextRate;
                 }
 
-                // Add to queue if not visited
                 if (!visited.contains(nextCurrency)) {
                     queue.add(new ExchangePath(nextCurrency, nextRate));
                 }
             }
         }
 
-        // No conversion rate available
         return 0;
     }
 
-    // Helper class for BFS
-    private static class ExchangePath {
-        String currency;
-        double rate;
+    /**
+     * Represents a path in the currency exchange graph.
+     */
+    private static final class ExchangePath {
+        private final String currency;
+        private final double rate;
 
-        ExchangePath(String currency, double rate) {
+        /**
+         * Constructs a new ExchangePath.
+         *
+         * @param currency the currency
+         * @param rate     the exchange rate
+         */
+        ExchangePath(final String currency, final double rate) {
             this.currency = currency;
             this.rate = rate;
         }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public double getRate() {
+            return rate;
+        }
     }
-
-
-
 }

@@ -1,49 +1,35 @@
 package org.poo.report;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.poo.account.Account;
 import org.poo.transaction.Transaction;
 
 import java.util.ArrayList;
 
-public class PaymentsRecord {
+/**
+ * Handles recording and reporting of payment transactions for an account.
+ * The account has to be a classic one, because the spending report is not
+ * available for the savings account.
+ * The transactions were made in payOnline commands.
+ */
+public final class PaymentsRecord {
 
-    private ArrayList<Transaction> transactions = new ArrayList<>();
+    // The list of transactions in the record
+    private final ArrayList<Transaction> transactions = new ArrayList<>();
 
-    public void addTransaction(Transaction transaction) {
+    /**
+     * Adds a transaction to the record.
+     *
+     * @param transaction the transaction to add
+     */
+    public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
     }
 
+    /**
+     * Retrieves all transactions in the record.
+     *
+     * @return a list of transactions
+     */
     public ArrayList<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public ObjectNode generateReportBetweenTimestamps(int timestampStart, int timestampEnd, int timestamp, Account account) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode output = mapper.createObjectNode();
-            output.put("command", "report");
-
-            ObjectNode accountNode = output.putObject("output");
-            accountNode.put("balance", account.getBalance());
-            accountNode.put("currency", account.getCurrency());
-            accountNode.put("IBAN", account.getIBAN());
-
-            ArrayNode transactionArray = accountNode.putArray("transactions");
-
-            for (Transaction transaction : transactions) {
-                if (transaction.getTimestamp() >= timestampStart && transaction.getTimestamp() <= timestampEnd) {
-                    ObjectNode transactionNode = transactionArray.addObject();
-                    transaction.toJson(transactionNode);
-                }
-            }
-
-            output.put("timestamp", timestamp);
-            return output; // Return the ObjectNode directly
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating report", e);
-        }
+        return new ArrayList<>(transactions); // Return a defensive copy
     }
 }

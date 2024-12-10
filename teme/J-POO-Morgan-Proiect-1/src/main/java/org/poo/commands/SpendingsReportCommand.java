@@ -13,6 +13,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
+/**
+ * Command class for generating a spendings report.
+ * The spendings report is generated for a specific account between two timestamps.
+ * It is available only for ClassicAccounts.
+ */
 public class SpendingsReportCommand implements Command {
 
     private final UserRegistry userRegistry;
@@ -20,22 +25,41 @@ public class SpendingsReportCommand implements Command {
     private final int timestamp;
     private final int startTimestamp;
     private final int endTimestamp;
-    private final String IBAN;
+    private final String iban;
 
-    public SpendingsReportCommand(UserRegistry userRegistry, ArrayNode output, int startTimestamp, int endTimestamp, String account, int timestamp) {
+    /**
+     * Constructor for the SpendingsReportCommand class.
+     *
+     * @param userRegistry   the UserRegistry object
+     * @param output         the ArrayNode object
+     * @param startTimestamp the start timestamp
+     * @param endTimestamp   the end timestamp
+     * @param account        the IBAN of the account
+     * @param timestamp      the timestamp
+     */
+    public SpendingsReportCommand(final UserRegistry userRegistry,
+                                  final ArrayNode output,
+                                  final int startTimestamp,
+                                  final int endTimestamp,
+                                  final String account,
+                                  final int timestamp) {
         this.userRegistry = userRegistry;
         this.output = output;
-        this.IBAN = account;
+        this.iban = account;
         this.startTimestamp = startTimestamp;
         this.endTimestamp = endTimestamp;
         this.timestamp = timestamp;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
-        Account account = userRegistry.getAccountByIBAN(IBAN);
+        Account account = userRegistry.getAccountByIBAN(iban);
 
-        if(account == null) {
+        // if the account is not found, return an error message
+        if (account == null) {
             ObjectNode node = output.addObject();
             node.put("command", "spendingsReport");
             ObjectNode outputNode = node.putObject("output");
@@ -45,25 +69,34 @@ public class SpendingsReportCommand implements Command {
             return;
         }
 
-        User user = userRegistry.getUserByIBAN(IBAN);
+        // get the user associated with the account
+        User user = userRegistry.getUserByIBAN(iban);
 
-        if(account.getType().equals("classic")) {
+        // check if the account is a ClassicAccount, because the spendings report is
+        // available only for ClassicAccounts
+        if (account.getType().equals("classic")) {
+            // convert the account to a ClassicAccount
             ClassicAccount classicAccount = (ClassicAccount) account;
-            PaymentsRecord paymentsRecord = classicAccount.getPaymentsRecord();
 
+            // get the payments record and the list of commerciants
+            PaymentsRecord paymentsRecord = classicAccount.getPaymentsRecord();
             ArrayList<Commerciant> commerciantsList = classicAccount.getCommerciantList();
 
+            // create a SpendingsReport object
             SpendingsReport spendingsReport = new SpendingsReport(paymentsRecord, commerciantsList);
 
-            ObjectNode node = spendingsReport.generateSpendingsReportBetweenTimestamps(startTimestamp, endTimestamp, timestamp, account, commerciantsList);
+            // generate the spendings report
+            ObjectNode node =
+                    spendingsReport.generateSpendingsReportBetweenTimestamps(startTimestamp,
+                    endTimestamp, timestamp, account, commerciantsList);
             output.add(node);
-        }
-        else {
-
+        } else {
+            // if the account is not a ClassicAccount, return an error message
             ObjectNode node = output.addObject();
             node.put("command", "spendingsReport");
             ObjectNode outputNode = node.putObject("output");
-            outputNode.put("error", "This kind of report is not supported for a saving account");
+            outputNode.put("error", "This kind of report is not supported "
+                    + "for a saving account");
             node.put("timestamp", timestamp);
         }
 

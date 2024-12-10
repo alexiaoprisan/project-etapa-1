@@ -1,25 +1,43 @@
 package org.poo.commands;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.account.Account;
 import org.poo.user.UserRegistry;
 import org.poo.user.User;
 
+/**
+ * This class represents a command that sets an alias for an account,
+ * The alias can be used when an account needs to send money to another account
+ * and the user does not want to use the IBAN.
+ */
 public class SetAliasCommand implements Command {
     private final UserRegistry userRegistry;
-    private final ArrayNode output;
     private final String email;
-    private final String IBAN;
+    private final String iban;
     private final String alias;
 
-    public SetAliasCommand(UserRegistry userRegistry, ArrayNode output, int timestamp, String email, String IBAN, String alias) {
+    /**
+     * Constructor for the SetAliasCommand class.
+     *
+     * @param userRegistry the UserRegistry object
+     * @param timestamp    the timestamp
+     * @param email        the email
+     * @param iban         the IBAN
+     * @param alias        the alias
+     */
+    public SetAliasCommand(final UserRegistry userRegistry,
+                           final int timestamp,
+                           final String email,
+                           final String iban,
+                           final String alias) {
         this.userRegistry = userRegistry;
-        this.output = output;
         this.email = email;
-        this.IBAN = IBAN;
+        this.iban = iban;
         this.alias = alias;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() {
         User user = userRegistry.getUserByEmail(email);
@@ -27,13 +45,13 @@ public class SetAliasCommand implements Command {
             return;
         }
 
-        Account account = user.getAccountByIBAN(IBAN);
+        Account account = user.getAccountByIBAN(iban);
         if (account == null) {
             return;
         }
 
-       account.setAlias(alias);
-       // System.out.println(account.getAlias());
+        // Set the alias for the account
+        account.setAlias(alias);
 
     }
 }
