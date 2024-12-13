@@ -8,7 +8,7 @@ import org.poo.user.User;
  * Command to add funds to an account.
  * It will search for the account with the given iban and add the amount to its balance.
  */
-public class AddFundsCommand implements Command {
+public final class AddFundsCommand implements Command {
     private final UserRegistry userRegistry;
     private final String iban;
     private final double amount;

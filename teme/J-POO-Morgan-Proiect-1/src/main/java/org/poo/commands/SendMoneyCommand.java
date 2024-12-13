@@ -12,7 +12,7 @@ import org.poo.user.User;
 /**
  * This class represents a command that sends money from one account to another.
  */
-public class SendMoneyCommand implements Command {
+public final class SendMoneyCommand implements Command {
     private final UserRegistry userRegistry;
     private final ArrayNode output;
     private final int timestamp;

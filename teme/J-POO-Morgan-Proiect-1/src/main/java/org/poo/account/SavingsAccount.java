@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * <p>
  * This class is not designed for extension.
  */
-public class SavingsAccount implements Account {
+public final class SavingsAccount implements Account {
     private String currency;
     private String accountType;
     private String iban;

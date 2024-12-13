@@ -25,7 +25,7 @@ import org.poo.utils.Utils;
  * Command class for the payOnline command.
  * Is is used to pay online using a card, if the card has enough funds.
  */
-public class PayOnlineCommand implements Command {
+public final class PayOnlineCommand implements Command {
     private final UserRegistry userRegistry;
     private final ExchangeRates exchangeRates;
     private final ArrayNode output;

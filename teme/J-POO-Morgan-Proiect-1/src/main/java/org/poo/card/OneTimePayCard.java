@@ -5,7 +5,7 @@ package org.poo.card;
  * A one-time pay card can only be used once, then it is deleted
  * and a new card is created to replace it.
  */
-public class OneTimePayCard implements Card {
+public final class OneTimePayCard implements Card {
     private String cardNumber;
     private static String type = "oneTimePay";
     private String status;

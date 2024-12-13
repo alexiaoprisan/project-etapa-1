@@ -13,7 +13,7 @@ import org.poo.user.User;
  * Command to check the status of a card.
  * The status of a card can be "active", "frozen" or "warning".
  */
-public class CheckCardStatusCommand implements Command {
+public final class CheckCardStatusCommand implements Command {
     private final UserRegistry userRegistry;
     private final ArrayNode output;
     private final String cardNumber;

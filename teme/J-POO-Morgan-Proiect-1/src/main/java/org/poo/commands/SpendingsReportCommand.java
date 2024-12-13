@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * The spendings report is generated for a specific account between two timestamps.
  * It is available only for ClassicAccounts.
  */
-public class SpendingsReportCommand implements Command {
+public final class SpendingsReportCommand implements Command {
 
     private final UserRegistry userRegistry;
     private final ArrayNode output;

@@ -10,7 +10,7 @@ import org.poo.card.Card;
 /**
  * Command to delete a card from a user's account.
  */
-public class DeleteCardCommand implements Command {
+public final class DeleteCardCommand implements Command {
     private final UserRegistry userRegistry;
     private final int timestamp;
     private final String email;

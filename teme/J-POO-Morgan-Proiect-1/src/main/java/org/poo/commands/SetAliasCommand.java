@@ -9,7 +9,7 @@ import org.poo.user.User;
  * The alias can be used when an account needs to send money to another account
  * and the user does not want to use the IBAN.
  */
-public class SetAliasCommand implements Command {
+public final class SetAliasCommand implements Command {
     private final UserRegistry userRegistry;
     private final String email;
     private final String iban;

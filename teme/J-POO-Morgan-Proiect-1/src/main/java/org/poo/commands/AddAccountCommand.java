@@ -11,7 +11,7 @@ import org.poo.utils.Utils;
  * Command to create a new account for a user.
  * A user holds multiple accounts.
  */
-public class AddAccountCommand implements Command {
+public final class AddAccountCommand implements Command {
     private final UserRegistry userRegistry;
     private final int timestamp;
     private final String email;

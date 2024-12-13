@@ -4,7 +4,7 @@ package org.poo.card;
  * This class represents a regular card.
  * A regular card can be used multiple times, for transactions.
  */
-public class RegularCard implements Card {
+public final class RegularCard implements Card {
     private String cardNumber;
     private static String type = "regular";
     private String status;

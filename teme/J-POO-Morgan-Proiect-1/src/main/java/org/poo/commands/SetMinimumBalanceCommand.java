@@ -7,7 +7,7 @@ import org.poo.user.UserRegistry;
  * Command class for setting the minimum balance of an account.
  * The account needs to be a SavingsAccount.
  */
-public class SetMinimumBalanceCommand implements Command {
+public final class SetMinimumBalanceCommand implements Command {
     private final UserRegistry userRegistry;
     private final int timestamp;
     private final String iban;

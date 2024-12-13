@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Transaction that represents a warning for a payment.
  */
-public class WarningForPay extends Transaction {
+public final class WarningForPay extends Transaction {
 
     /**
      * Constructor for the WarningForPay class.

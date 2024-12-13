@@ -15,6 +15,30 @@ public final class UserRegistry {
 
     private final List<User> users = new ArrayList<>();
 
+    private static UserRegistry instance;
+
+    private UserRegistry() {
+    }
+
+    /**
+     * Singleton instance getter.
+     *
+     * @return the singleton instance of the UserRegistry.
+     */
+    public static UserRegistry getInstance() {
+        if (instance == null) {
+            instance = new UserRegistry();
+        }
+        return instance;
+    }
+
+    /**
+     * Clears the list of users.
+     */
+    public void reset() {
+        users.clear();
+    }
+
     /**
      * Getter for the list of users.
      *

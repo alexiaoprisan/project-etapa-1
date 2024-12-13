@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
  * <p>
  * This class is part of the Command design pattern.
  */
-public class CommandFactory {
+public final class CommandFactory {
     private final UserRegistry userRegistry;
     private final ExchangeRates exchangeRates;
     private final ArrayNode output;

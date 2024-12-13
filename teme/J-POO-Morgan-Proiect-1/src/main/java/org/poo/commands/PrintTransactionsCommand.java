@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * when the user made a transaction or made operations with the card
  * and account.
  */
-public class PrintTransactionsCommand implements Command {
+public final class PrintTransactionsCommand implements Command {
     private final UserRegistry userRegistry;
     private final String email;
     private final int timestamp;

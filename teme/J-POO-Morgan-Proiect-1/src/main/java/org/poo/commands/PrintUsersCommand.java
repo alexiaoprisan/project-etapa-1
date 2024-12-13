@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Command to print all users and their accounts and cards.
  */
-public class PrintUsersCommand implements Command {
+public final class PrintUsersCommand implements Command {
 
     private final UserRegistry userRegistry;
     private final ArrayNode output;

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Command to delete an account
  */
-public class DeleteAccountCommand implements Command {
+public final class DeleteAccountCommand implements Command {
     private final UserRegistry userRegistry;
     private final ArrayNode output;
     private final int timestamp;

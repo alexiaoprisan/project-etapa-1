@@ -11,7 +11,7 @@ import org.poo.user.UserRegistry;
  * to the balance of an account.
  * The account must be a savings account.
  */
-public class AddInterestCommand implements Command {
+public final class AddInterestCommand implements Command {
     private UserRegistry userRegistry;
     private ArrayNode output;
     private int timestamp;

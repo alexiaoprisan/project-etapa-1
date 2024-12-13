@@ -12,7 +12,7 @@ import org.poo.user.User;
 /**
  * Command to change the interest rate of a savings account.
  */
-public class ChangeInterestRateCommand implements Command {
+public final class ChangeInterestRateCommand implements Command {
     private UserRegistry userRegistry;
     private ArrayNode output;
     private int timestamp;

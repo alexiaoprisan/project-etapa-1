@@ -15,7 +15,7 @@ import java.util.List;
  * Command to split a payment between multiple accounts.
  * Checks if the accounts exist and have enough balance to perform the split payment.
  */
-public class SplitPaymentCommand implements Command {
+public final class SplitPaymentCommand implements Command {
     private UserRegistry userRegistry;
     private ArrayNode output;
     private int timestamp;
