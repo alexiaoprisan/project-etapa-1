@@ -1,3 +1,15 @@
+commit 753f7c1a02f71be4e9ec29c610a7639f4ba3eb6b
+Author: Oprisan <alexia.oprisan@stud.acs.upb.ro>
+Date:   Fri Dec 13 12:50:54 2024 +0200
+
+    tema gata, de facut readme
+
+commit d8781effb12777d8e012a8c542a62fb75208c3e3
+Author: Oprisan <alexia.oprisan@stud.acs.upb.ro>
+Date:   Tue Dec 10 23:16:58 2024 +0200
+
+    checkstyle rezolvat, de incercat singleton
+
 commit 8bf7aa3cf91283ff5ca10ecdb101e768a092145c
 Author: Oprisan <alexia.oprisan@stud.acs.upb.ro>
 Date:   Tue Dec 10 00:09:49 2024 +0200
