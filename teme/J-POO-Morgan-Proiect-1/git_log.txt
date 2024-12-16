@@ -1,3 +1,9 @@
+commit 847bca66c37613a642fca885072fa5865afd8a53
+Author: Oprisan <alexia.oprisan@stud.acs.upb.ro>
+Date:   Mon Dec 16 11:32:58 2024 +0200
+
+    gata temagit add .!
+
 commit 753f7c1a02f71be4e9ec29c610a7639f4ba3eb6b
 Author: Oprisan <alexia.oprisan@stud.acs.upb.ro>
 Date:   Fri Dec 13 12:50:54 2024 +0200
